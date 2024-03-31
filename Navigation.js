@@ -77,6 +77,8 @@ function MyTabs({ authenticated }) { // Aquí se recibe authenticated como props
             component={LoanAplication}
             options={{
               tabBarLabel: "Solicitud de prestamo",
+              headerTintColor: "white",
+          headerStyle: { backgroundColor: "#525fe1" },
               tabBarIcon: ({ color }) => (
                 <MaterialCommunityIcons
                   name="account-check"
@@ -91,7 +93,7 @@ function MyTabs({ authenticated }) { // Aquí se recibe authenticated como props
                     name="logout"
                     size={24}
                     style={{ marginRight: 20 }}
-                    color="red"
+                    color="white"
                   />
                 </TouchableOpacity>
               ),
