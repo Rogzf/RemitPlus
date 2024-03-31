@@ -18,6 +18,7 @@ import {
 } from "firebase/auth";
 
 const auth = getAuth(appFirebase);
+
 const Login = (props) => {
   //estados.
   const [email, setEmail] = useState();
@@ -35,7 +36,7 @@ const Login = (props) => {
   const logIngUser = async () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      Alert.alert("iniciando sesion", "accediendo..!");
+      Alert.alert("iniciando sesion");
       props.navigation.navigate("Solicitud"); //redirecciona a pagina a screen al iniciar la sesion.
     } catch (error) {
       console.log(error);

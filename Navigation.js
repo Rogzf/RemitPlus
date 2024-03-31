@@ -8,13 +8,27 @@ import Quienes from "./screen/WhoWeAre";
 import login from "./screen/Login";
 import LoanAplication from "./screen/LoanApplication";
 import appFirebase from "./Credentials";
-import { getAuth } from "firebase/auth";
+import { getAuth,signOut} from "firebase/auth";
+import { TouchableOpacity } from 'react-native';
+
+
+
 
 const tabs = createBottomTabNavigator();
 const homeStack = createStackNavigator();
 const auth = getAuth(appFirebase);
 
-function MyTabs({ authenticated }) { // Aquí se recibe authenticated como prop
+function MyTabs({ authenticated }) { // Aquí se recibe authenticated como props
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        // Manejar la lógica después del cierre de sesión, como redireccionar a la pantalla de inicio de sesión
+      })
+      .catch((error) => {
+        console.log("Error al cerrar sesión:", error);
+      });
+  };
+
   return (
     <NavigationContainer>
       <tabs.Navigator
@@ -29,7 +43,7 @@ function MyTabs({ authenticated }) { // Aquí se recibe authenticated como prop
           component={MyStack}
           options={{
             tabBarLabel: "Bienvenido.!",
-            tabBarIcon: ({ color, size }) => (
+            tabBarIcon: ({ color }) => (
               <MaterialCommunityIcons
                 name="home-automation"
                 size={40}
@@ -47,7 +61,7 @@ function MyTabs({ authenticated }) { // Aquí se recibe authenticated como prop
             title: "Quienes Somos",
             headerTintColor: "white",
             headerStyle: { backgroundColor: "#525fe1" },
-            tabBarIcon: ({ size, color }) => (
+            tabBarIcon: ({  color }) => (
               <MaterialCommunityIcons
                 name="account-convert"
                 size={40}
@@ -63,12 +77,23 @@ function MyTabs({ authenticated }) { // Aquí se recibe authenticated como prop
             component={LoanAplication}
             options={{
               tabBarLabel: "Solicitud de prestamo",
-              tabBarIcon: ({ color, size }) => (
+              tabBarIcon: ({ color }) => (
                 <MaterialCommunityIcons
                   name="account-check"
                   size={40}
                   color={color}
                 />
+              ),
+              
+              headerRight: () => (
+                <TouchableOpacity onPress={handleLogout}>
+                  <MaterialCommunityIcons
+                    name="logout"
+                    size={24}
+                    style={{ marginRight: 20 }}
+                    color="red"
+                  />
+                </TouchableOpacity>
               ),
             }}
           />
@@ -78,7 +103,7 @@ function MyTabs({ authenticated }) { // Aquí se recibe authenticated como prop
   );
 }
 
-function MyStack() {
+function MyStack({authenticated}) {
   return (
     <homeStack.Navigator initialRouteName="homeScreen">
       <homeStack.Screen
@@ -90,7 +115,9 @@ function MyStack() {
           headerStyle: { backgroundColor: "#525fe1" },
         }}
       />
-      <homeStack.Screen
+      {!authenticated&&(
+
+        <homeStack.Screen
         name="login"
         component={login}
         options={{
@@ -100,6 +127,8 @@ function MyStack() {
           headerBackTitleVisible: false,
         }}
       />
+      )}
+      
     </homeStack.Navigator>
   );
 }
@@ -109,11 +138,7 @@ export default function Navigation() {
 
   useEffect(() => {
     const validationLogin = auth.onAuthStateChanged((user) => {
-      if (user) {
-        setAuthenticated(true);
-      } else {
-        setAuthenticated(false);
-      }
+      setAuthenticated(!!user)
     });
     return validationLogin;
   }, []);

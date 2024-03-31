@@ -1,11 +1,29 @@
-import React from "react";
+import React, { useEffect ,useState} from "react";
 import { View, Text } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 import { ImageBackground } from "react-native"; //me da error revisarlo
+import { getAuth } from "firebase/auth";
+import appFirebase from "../Credentials";
+
+const auth=getAuth(appFirebase)
 const Home = () => {
+  const [authenticated, setAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const validationLogin = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setAuthenticated(true);
+      } else {
+        setAuthenticated(false);
+      }
+    });
+    return validationLogin;
+  }, []);
+
   const navigation = useNavigation();
+
   return (
     <View
       style={{
@@ -57,8 +75,12 @@ const Home = () => {
       </Text>
 
       <TouchableOpacity
-        onPress={() => navigation.navigate("login")}
-        style={{
+onPress={() => {
+  if (!authenticated) {
+    navigation.navigate("login");
+  }
+}}
+disabled={authenticated}        style={{
           backgroundColor: "#525fe1",
           padding: 15,
           width: "50%",
@@ -74,7 +96,7 @@ const Home = () => {
             color: "white",
           }}
         >
-          ¡Regístrate Ahora!
+          {authenticated ? "Explora Remitplus" : "¡Regístrate Ahora!"}
         </Text>
       </TouchableOpacity>
       <FontAwesome
