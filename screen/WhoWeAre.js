@@ -1,8 +1,9 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 
 const QuienesSomos = () => {
   return (
+    <ScrollView>
     <View>
       <Text style={{
         fontSize:30,
@@ -68,6 +69,7 @@ const QuienesSomos = () => {
         podemos hacer por ti hoy mismo!
       </Text>
     </View>
+    </ScrollView>
   );
 };
 

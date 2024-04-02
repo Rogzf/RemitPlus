@@ -1,5 +1,5 @@
 import React, { useEffect ,useState} from "react";
-import { View, Text } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
@@ -25,6 +25,7 @@ const Home = () => {
   const navigation = useNavigation();
 
   return (
+    <ScrollView>
     <View
       style={{
         flex: 1,
@@ -121,6 +122,7 @@ disabled={authenticated}        style={{
         mientras construyes tu nuevo hogar!
       </Text>
     </View>
+    </ScrollView>
   );
 };
 
